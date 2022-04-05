@@ -1,4 +1,9 @@
 FROM openjdk:17
-COPY "./target/paracasa-0.0.1-SNAPSHOT.jar"  "app.jar"
-EXPOSE 9000
-ENTRYPOINT ["java", "-jar", "app.jar"]
+VOLUME /tmp
+ARG JAVA_OPTS
+ENV JAVA_OPTS=$JAVA_OPTS
+COPY target/paracasa-0.0.1-SNAPSHOT.jar paracasa.jar
+EXPOSE 8080
+ENTRYPOINT exec java $JAVA_OPTS -jar paracasa.jar
+# For Spring-Boot project, use the entrypoint below to reduce Tomcat startup time.
+#ENTRYPOINT exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar paracasa.jar
